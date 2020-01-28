@@ -1,0 +1,10 @@
+.CodeMirror {
+  height: auto;
+  background-color: rgb(31, 31, 31);
+}
+.CodeMirror-scroll {
+  filter: invert(76%);
+}
+.CodeMirror-gutters {
+  display: none;
+}
