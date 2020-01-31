@@ -30,12 +30,14 @@ import 'hypermd/addon/table-align';
 //Import Powerpacks
 import 'hypermd/powerpack/paste-with-turndown'
 import 'hypermd/powerpack/fold-emoji-with-emojione'
-import 'hypermd/powerpack/insert-file-with-smms'
+
 
 //Import Katex powerpack and css
 import 'hypermd/powerpack/fold-math-with-katex'
 import 'katex/dist/katex.min.css'
 
+//Import our adapted powerpack
+import 'hypermd/powerpack/insert-file-with-firestore'
 
 function App() {
   const [content, setContent] = useState("");
@@ -64,7 +66,7 @@ function App() {
             link: true,
             math: true,
           },
-          
+        
         
         }}
         onBeforeChange={(editor, data, value) => {
@@ -98,3 +100,4 @@ function App() {
 }
 
 export default App;
+
