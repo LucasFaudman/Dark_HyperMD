@@ -12,9 +12,34 @@ import "codemirror/theme/material.css";
 
 import "./App.css";
 
+import 'hypermd/core';
+import 'hypermd/mode/hypermd';
+
+//Import HyperMD addons
+import 'hypermd/addon/hide-token';
+import 'hypermd/addon/cursor-debounce';
+import 'hypermd/addon/fold';
+import 'hypermd/addon/read-link';
+import 'hypermd/addon/click';
+import 'hypermd/addon/hover';
+import 'hypermd/addon/paste';
+import 'hypermd/addon/insert-file';
+import 'hypermd/addon/mode-loader';
+import 'hypermd/addon/table-align';
+
+//Import Powerpacks
+import 'hypermd/powerpack/paste-with-turndown'
+import 'hypermd/powerpack/fold-emoji-with-emojione'
+import 'hypermd/powerpack/insert-file-with-smms'
+
+//Import Katex powerpack and css
+import 'hypermd/powerpack/fold-math-with-katex'
+import 'katex/dist/katex.min.css'
+
+
 function App() {
   const [content, setContent] = useState("");
-
+  
   return (
     <div className="App">
       <CodeMirror
@@ -25,7 +50,22 @@ function App() {
           lineNumbers: false,
           lineWrapping: true,
           smartIndent: true,
-          readOnly: false
+          readOnly: false,
+
+          //Add HyperMD-Specific Options
+          hmdHideToken: true,
+          hmdPaste: true,
+          hmdClick: true,
+          hmdHover: true,
+          hmdTableAlign: true,
+          //Enable folding
+          hmdFold: {
+            image: true,
+            link: true,
+            math: true,
+          },
+          
+        
         }}
         onBeforeChange={(editor, data, value) => {
           setContent(value);
@@ -38,8 +78,8 @@ function App() {
       <CodeMirror
         value={content}
         options={{
-          mode: "hypermd",
-          theme: "hypermd-light",
+          //mode: "hypermd",
+          //theme: "hypermd-light",
           lineNumbers: false,
           lineWrapping: true,
           smartIndent: true,
@@ -49,7 +89,8 @@ function App() {
           setContent(value);
         }}
         onChange={(editor, data, value) => {
-          switchToHyperMD(editor);
+          // Do not put second editor into HyperMD mode so raw output can be seen 
+          //switchToHyperMD(editor);
         }}
       />
     </div>
