@@ -62,7 +62,7 @@ const TEST_NODE_DATA = [
   {
     id: "html_test",
     content:
-      "<button>HTML Test Button</button> <iframe src='https://google.com'></iframe><img src='https://laobubu.net/HyperMD/demo/logo.png'/>"
+      "<button>HTML Test Button</button> <iframe src='https://1cademy.com'></iframe><img src='https://laobubu.net/HyperMD/demo/logo.png'/>"
   },
   { id: "link_test", content: "[test_link](https://laobubu.net/HyperMD)" },
   {
@@ -84,6 +84,9 @@ function App() {
   const importedPackages = [];
   
   function renderTextAreas(nodes) {
+    //render textareas with a unique Id for each node
+    //Note: the header and button are just to show that each editor has
+    //different options set based on its content
     return nodes.map(node => (
       <>
         <h6 className="DEBUG">
@@ -117,24 +120,35 @@ function App() {
   }
 
   function convertTextAreasToCodeMirrors(nodes) {
+    //prevent duplicates
     if (Object.keys(codeMirrors).length === 0) {
       for (let node of nodes) {
+        //get textarea by node id
         let textarea = document.getElementById(node.id);
+        //set HyperMD options based on content 
+        //and add new paths to required packages if any are needed
         let [hmdOptions, foundMD] = getHyperMDOptions(node.content, requiredPackages);
         if (foundMD) {
+          //convert textarea to a CodeMirror with HyperMD if MD is present
           let cm = fromTextArea(textarea, hmdOptions);
+          //set cursor to last char so all MD renders
           cm.setCursor({ line: cm.doc.size, ch: node.content.length });
+          //prevent duplicates
           codeMirrors[node.id] = cm;
         }
       }
     }
+    //Then dynamically import required scripts as need.
     getRequiredPackageScripts(requiredPackages, importedPackages)
   }
 
   function convertCodeMirrorsToTextAreas(codeMirrors) {
+    //
     for (let cm of Object.values(codeMirrors)) {
+      //convert CodeMirrors back to textarea and update textarea contents
       cm.toTextArea();
     }
+    //remove CodeMirrors
     setCodeMirrors({});
   }
 
