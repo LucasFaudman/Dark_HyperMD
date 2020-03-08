@@ -1,4 +1,6 @@
+//Finds any GitHub Flavored MD
 const GfmdRE = /(?:[_*~]{1,3}|#+ .+\n|[-*+] .+\n)/
+//REs corresponding to HyperMD options and addons
 const HmdAddonREs = {
   "hmdTableAlign_/": /\|\n(?:\| ?-\-+ ?)+\|?\n\|/,
   "hmdFoldCode_/": /(~~~+|```+)[ \t]*([\w+#-]*)[^\n`\\]*/,
@@ -29,6 +31,7 @@ const DEFAULT_HMD_OPTIONS = {
 
 };
 
+//package requirements dependant on HyperMD options and addons
 const HmdPackageRequirements = {
   essentials: new Set([
     "codemirror/lib/codemirror",
@@ -84,14 +87,15 @@ function getHyperMDOptions(raw_text, required_packages = {}, overrides = {}) {
   var foundMD = false;
 
   for (let [hmdOptionKeys, re] of Object.entries(HmdAddonREs)) {
+    //use addon if MD that requires it is found in raw_text  
     let useAddon = re.exec(raw_text) !== null;
     if (useAddon){
         foundMD = true
         required_packages[hmdOptionKeys] = true
     }
 
+    //set HyperMD options
     var keys = hmdOptionKeys.split("_");
-
     if (keys[0] !== "/") {
       hmdOptions[keys[0]] = useAddon;
     }
@@ -101,6 +105,7 @@ function getHyperMDOptions(raw_text, required_packages = {}, overrides = {}) {
     }
   }
 
+  //Check for Regular Github flavored MD if no other MD was found
   if (!foundMD){
       foundMD = GfmdRE.exec(raw_text)
   }
@@ -113,8 +118,9 @@ function getRequiredPackageScripts(required_packages, imported_packages){
         if (!imported_packages.includes(pkg_group_key)&&HmdPackageRequirements[pkg_group_key]){
             imported_packages.push(pkg_group_key)
             for (let pkg_path of HmdPackageRequirements[pkg_group_key]){
+                
+                //This is we would dynamically import neccessary packages
                 console.log("requirejs: "+pkg_path)
-                //scripts.push(<script src={'./node_modules'+pkg_path}/>)
             }
         }
     }
